@@ -1,11 +1,6 @@
   # Traffic Sign Classification Model
 
 
-
-
-![dataset-cover](https://github.com/mathaiostop23/Traffic-Sign-Classification-Model/assets/75705991/f220383f-51b6-46dc-b26b-1be903db62f1)
-
-
   ## Overview 
 
   This project is a deep learning-based traffic sign classification system implemented using TensorFlow. 
@@ -48,10 +43,6 @@ The German Traffic Sign Recognition Benchmark (GTSRB) dataset is used for traini
 
 - Labels are one-hot encoded using `tf.keras.utils.to_categorical` to match the output format required for categorical crossentropy loss.
 
-**Visualization of Dataset :**
-
-![F5](https://github.com/mathaiostop23/Traffic-Sign-Classification-Model/assets/75705991/ddc14b22-fd66-4b83-8a9d-8db0e93296de)
-
 ## Model Architecture
 
 **Convolutional Neural Network (CNN):**
@@ -72,8 +63,6 @@ The German Traffic Sign Recognition Benchmark (GTSRB) dataset is used for traini
 - Fully connected dense layers interpret the extracted features and make predictions.
 - The final layer has softmax activation for multi-class classification.
 
-<img width="600" alt="Στιγμιότυπο οθόνης 2023-11-17, 8 05 10 μμ" src="https://github.com/mathaiostop23/Traffic-Sign-Classification-Model/assets/75705991/b5e40cf2-7762-4eef-aa3c-fc7a48ef60e2">
-
 ## Training
 
 **Hyperparameters :**
@@ -88,11 +77,6 @@ The German Traffic Sign Recognition Benchmark (GTSRB) dataset is used for traini
 - Training Accuracy : 99.26%
 - Validation Accuracy : 99.92%
 - Test Accuracy : 97.61%
-
-![Accuracy](https://github.com/mathaiostop23/Traffic-Sign-Classification-Model/assets/75705991/698b7dc6-56bd-479f-9507-4b061c22caf6)
-
-
-![Loss](https://github.com/mathaiostop23/Traffic-Sign-Classification-Model/assets/75705991/32170792-be9d-4a04-a47d-296e5a726e3e)
 
 ## Summary 
 

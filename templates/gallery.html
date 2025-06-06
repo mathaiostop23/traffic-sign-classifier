@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Gallery | Traffic Sign Classifier</title>
+    <meta name="description" content="Browse the gallery of traffic sign predictions with AI analysis results and confidence scores.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="logo-text">
+                Traffic<span class="logo-dot">AI</span>
+            </a>
+        <div class="nav-links">
+                <a href="{{ url_for('gallery') }}" class="nav-link active">
+                    <i class="fas fa-images"></i> Gallery
+                </a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="https://github.com/mathaios" target="_blank" class="nav-link">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="gallery-container fade-in">
+        <!-- Header -->
+        <div class="gallery-header">
+            <h1 class="gallery-title">
+                <i class="fas fa-history"></i>
+                {{ title }}
+            </h1>
+            <p class="gallery-subtitle">
+                {% if request.args.get('personal') == 'true' %}
+                Your personal collection of traffic sign predictions
+                {% else %}
+                Recent traffic sign classifications from our AI system
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="gallery-tabs">
+            <a href="{{ url_for('gallery', personal='false') }}" 
+               class="gallery-tab {% if not request.args.get('personal') == 'true' %}active{% endif %}">
+                <i class="fas fa-globe"></i>
+                All Predictions
+            </a>
+            {% if session.get('user_id') %}
+            <a href="{{ url_for('gallery', personal='true') }}" 
+               class="gallery-tab {% if request.args.get('personal') == 'true' %}active{% endif %}">
+                <i class="fas fa-user"></i>
+                My Predictions
+            </a>
+            {% endif %}
+        </div>
+        
+        <!-- Gallery Content -->
+        {% if history %}
+        <div class="gallery-stats slide-up">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-images"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">{{ history|length }}</div>
+                    <div class="stat-label">
+                        {% if history|length == 1 %}Prediction{% else %}Predictions{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number2">43</div>
+                    <div class="stat-label2">Sign Types</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number2">95%+</div>
+                    <div class="stat-label2">Accuracy</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery-grid slide-up">
+            {% for item in history %}
+            <article class="gallery-item">
+                <a href="{{ url_for('view_prediction', prediction_id=item.id) }}">
+                    <div class="gallery-image">
+                        <img src="{{ url_for('static', filename='uploads/' + item.filename) }}" 
+                             alt="{{ item.class_label }}"
+                             loading="lazy">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <i class="fas fa-eye"></i>
+                                <span>View Details</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>{{ item.class_label }}</h3>
+                        <div class="gallery-confidence">
+                            <i class="fas fa-chart-bar"></i>
+                            Confidence: {{ "%.1f"|format(item.confidence) }}%
+                        </div>
+                        <div class="gallery-meta">
+                            <div class="gallery-date">
+                                <i class="fas fa-clock"></i>
+                                {{ item.timestamp }}
+                            </div>
+                            {% if item.user_id %}
+                            <div class="gallery-user">
+                                <i class="fas fa-user"></i>
+                                User ID: {{ item.user_id[:8] }}...
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-gallery slide-up">
+            <div class="empty-icon">
+                <i class="fas fa-images"></i>
+            </div>
+            <h3>No Predictions Found</h3>
+            <p>
+                {% if request.args.get('personal') == 'true' %}
+                You haven't made any predictions yet. Start by uploading your first traffic sign image!
+                {% else %}
+                No predictions have been made yet. Be the first to try our AI classifier!
+                {% endif %}
+            </p>
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Make First Prediction
+            </a>
+        </div>
+        {% endif %}
+        
+        <!-- Action Buttons -->
+        <div class="gallery-actions text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-plus-circle"></i>
+                Analyze New Image
+            </a>
+            {% if history %}
+            <button class="btn btn-outline btn-lg" onclick="window.print()">
+                <i class="fas fa-print"></i>
+                Print Gallery
+            </button>
+            {% endif %}
+    </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Add smooth scrolling and lazy loading
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lazy loading for images
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.classList.add('loaded');
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+                
+                images.forEach(img => imageObserver.observe(img));
+            }
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>

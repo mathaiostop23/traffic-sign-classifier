@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result | Traffic Sign Classifier</title>
+    <meta name="description" content="View your traffic sign classification result with confidence score and detailed analysis.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="logo-text">
+                Traffic<span class="logo-dot">AI</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('gallery') }}" class="nav-link">
+                    <i class="fas fa-images"></i> Gallery
+                </a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="https://github.com/mathaios" target="_blank" class="nav-link">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="result-container fade-in">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="hero-title" style="font-size: 2.5rem;">
+                <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+                Analysis Complete
+            </h1>
+            <p class="hero-subtitle" style="color: var(--text-secondary);">
+                Here's what our AI detected in your traffic sign image
+            </p>
+        </div>
+
+        <!-- Result Content -->
+        <div class="result-content slide-up">
+            <!-- Image Section -->
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='uploads/' + filename) }}" 
+                     alt="Uploaded traffic sign" 
+                     class="result-image">
+                <div class="image-overlay">
+                    <div class="image-info">
+                        <i class="fas fa-image"></i>
+                        {{ filename }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prediction Details -->
+            <div class="prediction-details">
+                <h2 class="prediction-title">
+                    <i class="fas fa-traffic-light"></i>
+                    Detection Results
+                </h2>
+                
+                <!-- Main Prediction -->
+                <div class="main-prediction">
+                    <div class="prediction-label">
+                        {{ class_label }}
+                    </div>
+                    
+                    <div class="confidence-section">
+                        <label class="confidence-label">
+                            <i class="fas fa-chart-line"></i>
+                            Confidence Score
+                        </label>
+                        <div class="confidence-meter">
+                            <div class="confidence-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="confidence-text">{{ confidence }}</div>
+                    </div>
+                </div>
+
+                <!-- Alternative Predictions -->
+                {% if top_predictions %}
+                <div class="alternative-predictions">
+                    <h3>
+                        <i class="fas fa-list-alt"></i>
+                        Alternative Possibilities
+                    </h3>
+                    {% for pred in top_predictions %}
+                    <div class="alt-prediction">
+                        <span class="alt-label">{{ pred.label }}</span>
+                        <span class="alt-confidence">{{ pred.confidence }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Analyze Another Image
+                    </a>
+                    <a href="{{ url_for('gallery') }}" class="btn btn-outline">
+                        <i class="fas fa-history"></i>
+                        View History
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="result-info slide-up">
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>AI Analysis</h4>
+                        <p>Deep learning model processed your image through 43 traffic sign categories</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Processing Time</h4>
+                        <p>Analysis completed in less than 2 seconds using optimized neural networks</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Accuracy</h4>
+                        <p>Model trained on thousands of images with 95%+ validation accuracy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Animate confidence meter on page load
+        window.addEventListener('load', function() {
+            const confidenceFill = document.querySelector('.confidence-fill');
+            if (confidenceFill) {
+                setTimeout(() => {
+                    confidenceFill.style.width = '{{ confidence_value }}%';
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html> 

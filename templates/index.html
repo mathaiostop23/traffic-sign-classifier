@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Traffic Sign Classifier | Smart Recognition Technology</title>
+    <meta name="description" content="Advanced AI-powered traffic sign classification with real-time recognition and high accuracy predictions.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="logo-text">
+                Traffic<span class="logo-dot">AI</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('gallery') }}" class="nav-link">
+                    <i class="fas fa-images"></i> Gallery
+                </a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="https://github.com/mathaios" target="_blank" class="nav-link">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero-section fade-in">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-traffic-light"></i>
+                    Traffic Sign Classifier
+                </h1>
+                <p class="hero-subtitle">
+                    Advanced AI technology that recognizes and classifies traffic signs with high accuracy. 
+                    Upload an image and get instant predictions from our trained neural network.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number1">43</span>
+                        <span class="stat-label1">Sign Types</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number1">95%+</span>
+                        <span class="stat-label1">Accuracy</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number1">Instant</span>
+                        <span class="stat-label1">Results</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section slide-up">
+            <div class="upload-container">
+                <h2 class="text-center mb-4">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Upload Traffic Sign Image
+                </h2>
+                
+                <form action="/predict" method="post" enctype="multipart/form-data" id="prediction-form">
+                    <div class="file-input-container">
+                        <div class="file-input">
+                            <input type="file" name="file" id="file" accept=".jpg,.jpeg,.png,.webp" required>
+                            <label for="file" class="file-input-label" id="file-label">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                <div class="upload-text">Choose a file or drag and drop</div>
+                                <div class="upload-subtext">
+                                    Supports JPG, PNG, WEBP (Max 10MB)
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="selected-file" id="selected-file">
+                            <i class="fas fa-file-image file-icon"></i>
+                            <div class="file-info">
+                                <div class="file-name" id="file-name"></div>
+                                <div class="file-size" id="file-size"></div>
+                            </div>
+                            <button type="button" class="remove-file" id="remove-file">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg" id="predict-btn">
+                            <i class="fas fa-magic"></i>
+                            Analyze Traffic Sign
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Analyzing your traffic sign...</div>
+                    <div class="loading-text">This may take a few seconds</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Example Signs Section -->
+        <section class="examples-section slide-up">
+            <h2 class="examples-title">
+                <i class="fas fa-eye"></i>
+                Recognizable Traffic Signs
+            </h2>
+            <p class="examples-subtitle">
+                Our AI can identify 43 different types of traffic signs including speed limits, warnings, and regulatory signs.
+            </p>
+            
+            <div class="example-images">
+                <div class="example-item" data-sign="Stop Sign">
+                    <div class="example-image-placeholder">
+                        <i class="fas fa-stop-circle" style="font-size: 3rem; color: #DC2626;"></i>
+                    </div>
+                    <div class="example-label">Stop Signs</div>
+                </div>
+                <div class="example-item" data-sign="Speed Limit">
+                    <div class="example-image-placeholder">
+                        <i class="fas fa-tachometer-alt" style="font-size: 3rem; color: #2563EB;"></i>
+                    </div>
+                    <div class="example-label">Speed Limits</div>
+                </div>
+                <div class="example-item" data-sign="Yield">
+                    <div class="example-image-placeholder">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #F59E0B;"></i>
+                    </div>
+                    <div class="example-label">Yield Signs</div>
+                </div>
+                <div class="example-item" data-sign="No Entry">
+                    <div class="example-image-placeholder">
+                        <i class="fas fa-ban" style="font-size: 3rem; color: #EF4444;"></i>
+                    </div>
+                    <div class="example-label">No Entry</div>
+                </div>
+                <div class="example-item" data-sign="Warning">
+                    <div class="example-image-placeholder">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #F97316;"></i>
+                    </div>
+                    <div class="example-label">Warning Signs</div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{{ url_for('gallery') }}" class="btn btn-outline">
+                    <i class="fas fa-images"></i>
+                    View Recent Predictions
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section slide-up">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI-Powered</h3>
+                    <p>Advanced deep learning neural network trained on thousands of traffic sign images</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast Recognition</h3>
+                    <p>Get instant predictions with confidence scores and alternative suggestions</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>High Accuracy</h3>
+                    <p>Trained model achieves over 95% accuracy on standard traffic sign datasets</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Responsive design works perfectly on desktop, tablet, and mobile devices</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
